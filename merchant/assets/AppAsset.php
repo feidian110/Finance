@@ -21,6 +21,7 @@ class AppAsset extends AssetBundle
     ];
 
     public $js = [
+        'js/finance.js'
     ];
 
     public $depends = [
