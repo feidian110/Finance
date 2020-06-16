@@ -9,7 +9,7 @@ class FinanceCateEnum extends BaseEnum
     const METHOD = 2;
     const INCOME = 3;
     const EXPEND = 4 ;
-    const DAY = 5;
+    const SUPPLIER = 5;
 
 
 
@@ -23,7 +23,7 @@ class FinanceCateEnum extends BaseEnum
             self::METHOD => '结算',
             self::INCOME => '收入',
             self::EXPEND => '支出',
-            self::DAY => '全天',
+            self::SUPPLIER => '供应商',
 
         ];
     }

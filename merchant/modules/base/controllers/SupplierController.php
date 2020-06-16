@@ -1,19 +1,22 @@
 <?php
-namespace addons\Finance\store\controllers;
+namespace addons\Finance\merchant\modules\base\controllers;
 
-use addons\Crm\common\models\finance\Category;
-use addons\Crm\common\models\finance\Supplier;
-use addons\Crm\common\models\finance\SupplierProfile;
+use addons\Finance\common\enums\FinanceCateEnum;
+use addons\Finance\common\models\base\Category;
+use addons\Finance\common\models\base\Supplier;
+use addons\Finance\merchant\controllers\BaseController;
+use addons\Store\common\models\base\Inter;
 use common\enums\StatusEnum;
 use common\models\base\SearchModel;
-use common\traits\StoreCurd;
+use common\traits\MerchantCurd;
+
 use Yii;
 
 class SupplierController extends BaseController
 {
-    use StoreCurd;
+    use MerchantCurd;
 
-    public $modelClass = SupplierProfile::class;
+    public $modelClass = Supplier::class;
 
     public function actionIndex()
     {
@@ -30,8 +33,8 @@ class SupplierController extends BaseController
         $dataProvider = $searchModel
             ->search(Yii::$app->request->queryParams);
         $dataProvider->query
-            ->andFilterWhere(['=', 'merchant_id', Yii::$app->user->identity->merchant_id])
-            ->andFilterWhere(['=','store_id',Yii::$app->services->store->getId()])
+            ->andFilterWhere(['=', 'merchant_id', $this->getMerchantId()])
+            ->andFilterWhere($this->getStoreId() ? ['=','store_id',Yii::$app->services->store->getId()] : [])
             ->andWhere(['>=', 'status', StatusEnum::DISABLED]);
 
         return $this->render('index', [
@@ -42,20 +45,23 @@ class SupplierController extends BaseController
 
     public function actionCreate()
     {
-        $model = new SupplierProfile();
-        // ajax 校验
-        $this->activeFormValidate($model);
+        $model = new Supplier();
+
         if( Yii::$app->request->isPost ){
+            $this->activeFormValidate($model);
             $data = Yii::$app->request->post();
-            if( $model->create($data) ){
+            $supplier = Inter::findOne($data['Supplier']['inter_id']);
+            $model->supplier_id = $supplier['supplier_id'] ?? null;
+            if( $model->load($data) && $model->save() ){
                 return $this->message('供应商添加成功！', $this->redirect(['index']), 'success');
             }
             return $this->message('供应商添加失败！', $this->redirect(['index']), 'error');
         }
         return  $this->renderAjax( $this->action->id,[
             'model' => $model,
-            'supplier' => Supplier::getNormalSupplierByAllow(),
-            'category' => Category::getCategoryDropDown('supplier')
+            'store' => Yii::$app->storeService->store->getDropDown(),
+            'supplier' => Yii::$app->storeService->inter->getSupplierDate(),
+            'category' => Yii::$app->financeService->cate->getDropDown(FinanceCateEnum::SUPPLIER),
         ] );
     }
 
@@ -65,8 +71,9 @@ class SupplierController extends BaseController
         $model = $this->findModel($id);
         return $this->renderAjax( $this->action->id,[
             'model' => $model,
-            'supplier' => Supplier::getNormalSupplierByAllow(),
-            'category' => Category::getCategoryDropDown('supplier')
+            'store' => Yii::$app->storeService->store->getDropDown(),
+            'supplier' => Yii::$app->storeService->inter->getSupplierDate(),
+            'category' => Yii::$app->financeService->cate->getDropDown(FinanceCateEnum::SUPPLIER),
         ] );
     }
 }

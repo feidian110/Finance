@@ -14,3 +14,8 @@ $("#receipt-customer_id").change(function(){
         }
     })
 });
+
+$("#supplier-inter_id").change(function(){
+    var opt=$("#supplier-inter_id").val();
+    alert(opt)
+});
