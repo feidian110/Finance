@@ -16,8 +16,10 @@ class CapitalController extends BaseController
 {
     public function actionReceivables()
     {
+
         $list1 = Customer::find()->select('id,title,merchant_id,receivables_balance')
             ->where(['merchant_id' => Yii::$app->services->merchant->getId()])
+            ->andWhere(['store_id' => 3])
             ->andWhere(['>=','status',CustomerStatusEnum::DISABLED])
             ->asArray()->all();
         $sum1 = $sum2 = $sum3 = $sum4 = $sum5  = 0;
@@ -26,7 +28,7 @@ class CapitalController extends BaseController
 
 
         $list2 = Yii::$app->getDb()
-            ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$merchant_id." and store_id=".'0'." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
+            ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$merchant_id." and store_id=".'3'." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
             ->queryAll();
 
 
