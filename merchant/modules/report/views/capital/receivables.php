@@ -1,9 +1,7 @@
 <?php
-use common\enums\BillTypeEnum;
-USE common\enums\CustomerTypeEnum;
 
-$this->title = Yii::t('app', 'Receivables Detail');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Receivables Manager'), 'url' => ['index']];
+$this->title = "应收款明细表";
+$this->params['breadcrumbs'][] = ['label' => "报表管理"];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -37,9 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         <td class="text-center"><?= $item['billDate'] ?? "";?></td>
                         <td class="text-center"><?= $item['billNo'] ?? "";?></td>
                         <td class="text-center"><?= $item['transType'] ?? "";?></td>
-                        <td class="text-right"><?= $item['receivables'] ?? "";?></td>
-                        <td class="text-right"><?= $item['advanceCharge'] ?? "";?></td>
-                        <td class="text-right"><?= $item['receivableBalance'] ?? "";?></td>
+                        <td class="text-right"><?= $item['receivables']==0 ? "" : $item['receivables'];?></td>
+                        <td class="text-right"><?= $item['advanceCharge'] == 0 ? "" : $item['advanceCharge'];?></td>
+                        <td class="text-right"><?= $item['receivableBalance'] == 0 ? "" : $item['receivableBalance'];?></td>
                         <td><?= $item['remark'] ?? "";?></td>
                     </tr>
                     <?php endforeach;?>
@@ -55,16 +53,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     </tr>
                     </tfoot>
                 </table>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer clearfix">
-                <ul class="pagination pagination-sm no-margin pull-right">
-                    <li><a href="#">«</a></li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">»</a></li>
-                </ul>
             </div>
         </div>
     </div>

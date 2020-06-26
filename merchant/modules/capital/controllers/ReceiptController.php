@@ -50,7 +50,10 @@ class ReceiptController extends BaseController
     {
         $model = new Receipt();
         if( Yii::$app->request->isPost ){
+            // ajax 校验
+            $this->activeFormValidate($model);
             $post = Yii::$app->request->post();
+            $model->sn = Yii::$app->financeService->base->createSn($this->modelClass,$this->financeType);
             $model->receipt_price = array_sum(array_column($post['Receipt']['detail'], 'price'));
 
             if( $model->create($post) ){

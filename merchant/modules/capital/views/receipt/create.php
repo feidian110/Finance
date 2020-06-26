@@ -21,18 +21,15 @@ $this->title = "添加收款单";
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title"><?= $this->title;?></h3>
+                    <div class="box-tools">
+                        单据编号：<?= $sn;?>&nbsp;&nbsp;
+                    </div>
                 </div>
                 <hr>
                 <div class="box-body">
                     <div class="row">
 
                         <div class="col-sm-6 border-right">
-                            <?= $form->field( $model, 'sn')->textInput(['readonly'=>"readonly",'value' => $sn]);?>
-                            <?= $form->field( $model, 'customer_id' )->dropDownList( $customer,['prompt'=>'请选择...'] )?>
-                            <?= $form->field( $model, 'payee_id' )->dropDownList( $staff,['prompt'=>'请选择...'] );?>
-                        </div>
-
-                        <div class="col-sm-6">
                             <?= $form->field( $model, 'receipt_date' )->widget(kartik\date\DatePicker::class, [
                                 'language' => 'zh-CN',
                                 'layout'=>'{picker}{input}',
@@ -47,6 +44,12 @@ $this->title = "添加收款单";
                                     'value' => $model->isNewRecord ? date( 'Y-m-d' ) : $model->receipt_date,
                                 ]
                             ]);?>
+                            <?= $form->field( $model, 'customer_id' )->dropDownList( $customer,['prompt'=>'请选择...'] )?>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <?= $form->field( $model, 'payee_id' )->dropDownList( $staff,['prompt'=>'请选择...'] );?>
                             <?= $form->field( $model, 'order_id' )->dropDownList( [],['prompt'=>'请选择...'] )?>
                             <div class="form-group field-receipt-receipt_date">
                                 <label class="control-label col-sm-2 text-right">制单人</label>
@@ -67,24 +70,28 @@ $this->title = "添加收款单";
                                 'name' => 'account_id',
                                 'title' => '结算账户',
                                 'type' => 'dropDownList',
-                                'items' => array_merge([''=>'请选择...'],Yii::$app->financeService->account->getDropDown()),
+                                'items' => Yii::$app->financeService->account->getDropDown(),
                             ],
                             [
                                 'name'  => 'price',
                                 'title' => '收款金额',
-                                'type' => 'textInput'
+                                'type' => 'textInput',
+                                'enableError' => false,
+                                'options' => [
+                                    'class' => 'input-priority'
+                                ]
                             ],
                             [
                                 'name' => 'method_id',
                                 'title' => '结算方式',
                                 'type' => 'dropDownList',
-                                'items' => array_merge([''=>'请选择...'],Yii::$app->financeService->settlement->getDropDown())
+                                'items' => Yii::$app->financeService->settlement->getDropDown()
                             ],
 
                             [
                                 'name'  => 'settlement',
                                 'title' => '结算号',
-                                'enableError' => false,
+                                //'enableError' => false,
                                 'options' => [
                                     'class' => 'input-priority'
                                 ]
@@ -109,7 +116,7 @@ $this->title = "添加收款单";
             </div>
         </div>
     </div>
-
+<?php \common\helpers\Html::modelBaseCss(); ?>
 <?php ActiveForm::end(); ?>
 
 

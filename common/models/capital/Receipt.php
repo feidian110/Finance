@@ -2,6 +2,7 @@
 
 namespace addons\Finance\common\models\capital;
 
+use addons\Crm\common\models\contract\Contract;
 use addons\Crm\common\models\customer\Customer;
 use common\behaviors\MerchantBehavior;
 use Yii;
@@ -60,6 +61,8 @@ class Receipt extends \common\models\base\BaseModel
     {
         $trans = Yii::$app->db->beginTransaction();
         try {
+            $order = Contract::findOne($data['Receipt']['order_id']);
+            $this->store_id = $order['store_id'];
             if(!$this->load($data) || !$this->save()){
                 throw new \Exception($this->getErrors());
             }
@@ -67,6 +70,9 @@ class Receipt extends \common\models\base\BaseModel
             foreach ($data['Receipt']['detail'] as $item){
                 $profile = new ReceiptDetail();
                 $profile->receipt_id = $this->id;
+                $profile->sn = $this->sn;
+                $profile->receipt_date = $this->receipt_date;
+                $profile->store_id = $this->store_id;
                 $profile->customer_id = $this->customer_id;
                 $profile->order_id = $this->order_id;
                 $profile->account_id = $item['account_id'];
@@ -77,10 +83,11 @@ class Receipt extends \common\models\base\BaseModel
                 if(!$profile->save()){
                     throw new \Exception($profile->getErrors());
                 }
+                if( !Yii::$app->financeService->invoice->createAdvance($profile) ){
+                    throw new \Exception('报表错误');
+                }
             }
-            if( !Yii::$app->financeService->invoice->createAdvance($this) ){
-                throw new \Exception('报表错误');
-            }
+
             $trans->commit();
         } catch (\Exception $e) {
             $trans->rollBack();
@@ -115,7 +122,7 @@ class Receipt extends \common\models\base\BaseModel
             'sn' => '单据编号',
             'customer_id' => '客户信息',
             'order_id' => '订单信息',
-            'receipt_date' => '收款日期',
+            'receipt_date' => '单据日期',
             'receipt_price' => '收款金额',
             'receipt_reason' => '收款摘由',
             'direction' => '入账方向',
@@ -129,6 +136,7 @@ class Receipt extends \common\models\base\BaseModel
             'audit_time' => '审核时间',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'detail' => '收款明细',
         ];
     }
 }

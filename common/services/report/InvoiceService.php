@@ -37,12 +37,14 @@ class InvoiceService extends Service
     public function createAdvance($data)
     {
         $model = new Invoice();
-        $model -> obj_id = $data['id'];
+        $model -> obj_id = $data['receipt_id'];
+        $model ->profile_id = $data['id'];
         $model -> customer_id = $data['customer_id'];
+        $model -> account_id = $data['account_id'];
         $model -> sn = $data['sn'];
         $model -> bill_date = $data['receipt_date'];
         $model -> bill_type = BillTypeEnum::INCOME;
-        $model -> income	= $data['receipt_price'];
+        $model -> income	= $data['price'];
         $model -> creator_id = Yii::$app->user->getId();
         $model -> owner_id = $data['payee_id'];
         $model -> store_id = $data['store_id'] ?? 0;

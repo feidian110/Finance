@@ -18,7 +18,7 @@ class OrderController extends OnAuthController
     {
         $id = Yii::$app->request->get('id');
         $customer = Contract::find()->select('id,title,act_time,slot,act_place,nature_id')
-            ->where(['id'=>$id])
+            ->where(['customer_id'=>$id])
             ->orderBy(['act_time'=>SORT_DESC])
             ->asArray()->all();
         return $customer;

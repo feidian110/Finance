@@ -19,17 +19,23 @@ class CapitalController extends BaseController
 
         $list1 = Customer::find()->select('id,title,merchant_id,receivables_balance')
             ->where(['merchant_id' => Yii::$app->services->merchant->getId()])
-            ->andWhere(['store_id' => 3])
+            ->andWhere( $this->getStoreId() ? ['store_id' => $this->getStoreId()] : [])
             ->andWhere(['>=','status',CustomerStatusEnum::DISABLED])
             ->asArray()->all();
         $sum1 = $sum2 = $sum3 = $sum4 = $sum5  = 0;
 
         $merchant_id = Yii::$app->services->merchant->getId();
 
+        if( $this->getStoreId() ){
+            $list2 = Yii::$app->getDb()
+                ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$merchant_id." and store_id=".$this->getStoreId()." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
+                ->queryAll();
+        }else{
+            $list2 = Yii::$app->getDb()
+                ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$merchant_id." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
+                ->queryAll();
+        }
 
-        $list2 = Yii::$app->getDb()
-            ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$merchant_id." and store_id=".'3'." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
-            ->queryAll();
 
 
         foreach ( $list1 as $arr => $row ){
