@@ -8,12 +8,71 @@ use addons\Crm\common\enums\CrmTypeEnum;
 use addons\Crm\common\enums\CustomerStatusEnum;
 use addons\Crm\common\models\customer\Customer;
 use addons\Finance\common\enums\BillTypeEnum;
+use addons\Finance\common\models\base\Account;
+use addons\Finance\common\models\report\Invoice;
 use addons\Finance\merchant\controllers\BaseController;
 use common\enums\StatusEnum;
 use Yii;
 
 class CapitalController extends BaseController
 {
+    public function actionCashBank()
+    {
+        $list1 = Account::find()->select('id,sn,title,merchant_id,current_balance')
+            ->where(['merchant_id' =>$this->getMerchantId()])
+            ->andWhere(['>=','status',CustomerStatusEnum::DISABLED])
+            ->asArray()->all();
+        $sum1 = $sum2 = $sum3 = $sum4 = $sum5  = 0;
+        $list2 = Yii::$app->getDb()
+            ->createCommand("select id,account_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and status=".StatusEnum::ENABLED." and (`bill_type` LIKE '%INCOME%' OR `bill_type` LIKE '%EXPEND%') group by account_id,id with rollup")
+            ->queryAll();
+
+        foreach ( $list1 as $arr => $row ){
+            $v[$arr]['code'] = $row['sn'];
+            $v[$arr]['title'] = $row['title'];
+            $v[$arr]['billDate'] = "";
+            $v[$arr]['billNo'] = "";
+            $v[$arr]['transType'] = "期初余额";
+            $v[$arr]['income'] = "";
+            $v[$arr]['expend'] = "";
+            $v[$arr]['balance'] = $row['current_balance'];
+            $v[$arr]['contacts'] = "";
+            $v[$arr]['owner'] = "";
+            foreach ( $list2 as $arr1 => $row1 ){
+                $arr = time() + $arr1;
+                if ($row['id'] == $row1['account_id'] ) {
+                    $sum1 += $a1 = $row1['income']>0 ? abs($row1['income']) : 0;
+                    $sum2 += $a2 = $row1['expend']>0 ? abs($row1['expend']) : 0;
+                    $a3 = $row['current_balance'] + $sum1 - $sum2;
+
+                    $v[$arr]['code'] = $row1['id'] ? $row['sn'] : "";
+                    $v[$arr]['title']     = $row1['id'] ? $row['title'] : "";
+                    $v[$arr]['billDate'] = $row1['id'] ? $row1['bill_date'] : "";
+                    $v[$arr]['billNo'] = $row1['id'] ? $row1['sn'] : "";
+                    $v[$arr]['transType'] = $row1['id'] ? BillTypeEnum::getValue($row1['bill_type']) : "小计：";;
+                    $v[$arr]['income'] = $row1['income'];
+                    $v[$arr]['expend'] = $row1['expend'];
+                    $v[$arr]['balance'] = $row1['id'] ? number_format($a3,2) : number_format($row['current_balance']+$row1['income']-$row1['expend'],2);
+                    $v[$arr]['contacts'] = $row1['id'] ? Yii::$app->financeService->invoice->getContactByBillType($row1['bill_type'],$row1['id']) : "";
+                    $v[$arr]['owner'] = $row1['id'] ? Yii::$app->financeService->invoice->getOwnerByBillType($row1['bill_type'],$row1['id']) : "";
+                }
+            }
+            $sum3 += $sum1;
+            $sum4 += $sum2;
+            $sum1 = $sum2 = 0;
+        }
+        $data['list'] = isset($v) ? array_values($v) :'';
+
+        return $this->render( $this->action->id,[
+            'model' => $data
+        ] );
+    }
+
+    /**
+     * 应收款报表
+     * @return string
+     * @throws \yii\db\Exception
+     */
     public function actionReceivables()
     {
 
@@ -24,15 +83,13 @@ class CapitalController extends BaseController
             ->asArray()->all();
         $sum1 = $sum2 = $sum3 = $sum4 = $sum5  = 0;
 
-        $merchant_id = Yii::$app->services->merchant->getId();
-
         if( $this->getStoreId() ){
             $list2 = Yii::$app->getDb()
-                ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$merchant_id." and store_id=".$this->getStoreId()." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
+                ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and store_id=".$this->getStoreId()." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
                 ->queryAll();
         }else{
             $list2 = Yii::$app->getDb()
-                ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$merchant_id." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
+                ->createCommand("select id,customer_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(income) as income from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and status=".StatusEnum::ENABLED."  group by customer_id,id with rollup" )
                 ->queryAll();
         }
 

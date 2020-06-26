@@ -2,7 +2,11 @@
 
 namespace addons\Finance\common\models\report;
 
+use addons\Crm\common\models\customer\Customer;
+use addons\Finance\common\enums\BillTypeEnum;
+use addons\Finance\common\models\base\Supplier;
 use common\behaviors\MerchantBehavior;
+use common\models\merchant\Member;
 use Yii;
 
 /**
@@ -51,6 +55,21 @@ class Invoice extends \common\models\base\BaseModel
             [['amount_receivable', 'amount_payable', 'income', 'expend', 'current_arrears'], 'number'],
             [['sn'], 'string', 'max' => 64],
         ];
+    }
+
+    public function getCustomer()
+    {
+        return $this->hasOne( Customer::class,['id' => 'customer_id'] );
+    }
+
+    public function getSupplier()
+    {
+        return $this->hasOne( Supplier::class,['id' =>'supplier_id'] );
+    }
+
+    public function getOwner()
+    {
+        return $this->hasOne( Member::class,['id' => 'owner_id'] );
     }
 
     /**

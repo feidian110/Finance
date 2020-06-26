@@ -98,4 +98,36 @@ class InvoiceService extends Service
         $data = $this->getOpeningBalanceSum() + $this->getReceivablesSum() - $this->getAdvanceChargeSum();
         return $data;
     }
+
+    /**
+     * 根据单据类型获取往来单位信息
+     * @param $billType
+     * @param $objId
+     * @return mixed|string
+     */
+    public function getContactByBillType($billType,$objId)
+    {
+        $invoice = $this->getInvoice($objId);
+        if( $billType == BillTypeEnum::INCOME ){
+            return $invoice['customer']['title'];
+        }elseif($billType == BillTypeEnum::EXPEND){
+            return $invoice['supplier']['title'];
+        }
+        return "";
+    }
+
+    public function getInvoice($id)
+    {
+        return Invoice::find()
+            ->where(['id' =>$id])
+            ->andWhere(['merchant_id' =>$this->getMerchantId()])
+            ->andWhere(['status' =>StatusEnum::ENABLED])
+            ->one();
+    }
+
+    public function getOwnerByBillType($billType,$objId)
+    {
+        $invoice = $this->getInvoice($objId);
+        return $invoice['owner']['realname'];
+    }
 }
