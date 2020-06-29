@@ -116,6 +116,11 @@ class InvoiceService extends Service
         return "";
     }
 
+    /**
+     * 获取单据信息
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
     public function getInvoice($id)
     {
         return Invoice::find()
@@ -125,9 +130,17 @@ class InvoiceService extends Service
             ->one();
     }
 
+    /**
+     * 根据单据类型 获取单据负责人信息
+     * @param $billType
+     * @param $objId
+     * @return mixed
+     */
     public function getOwnerByBillType($billType,$objId)
     {
         $invoice = $this->getInvoice($objId);
         return $invoice['owner']['realname'];
     }
+
+    
 }
