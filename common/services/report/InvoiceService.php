@@ -34,6 +34,25 @@ class InvoiceService extends Service
         return true;
     }
 
+    public function createPayable($data)
+    {
+        $model = new Invoice();
+        $model -> obj_id = $data['id'];
+        $model -> supplier_id = $data['supplier_id'];
+        $model -> sn = $data['sn'];
+        $model -> bill_date = date( 'Y-m-d',$data['execute_date'] );
+        $model -> bill_type = BillTypeEnum::WORKS;
+        $model -> amount_payable =$data['price'];
+        $model -> current_arrears = $data['price'];
+        $model -> creator_id = Yii::$app->user->getId();
+        $model -> owner_id = $data['owner_id'];
+        $model -> store_id = $data['store_id'] ?? 0;
+        if( !$model ->save() ){
+            return $model->getErrors();
+        }
+        return true;
+    }
+
     public function createAdvance($data)
     {
         $model = new Invoice();

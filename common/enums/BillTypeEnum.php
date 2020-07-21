@@ -10,6 +10,7 @@ class BillTypeEnum extends BaseEnum
 {
     const BAL = 'BAL';
     const SALE = 'SALE';
+    const WORKS = 'WORKS';
     const INCOME = 'INCOME';
     const EXPEND = 'EXPEND';
     const OTHER_INCOME = 'OTHER_INCOME';
@@ -25,6 +26,7 @@ class BillTypeEnum extends BaseEnum
         return [
             self::BAL => '期初余额',
             self::SALE => '销售合同',
+            self::WORKS => '执行工单',
             self::INCOME => '收款单',
             self::EXPEND => '付款单',
             self::OTHER_INCOME => '其他收款单',

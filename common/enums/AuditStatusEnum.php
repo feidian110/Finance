@@ -16,9 +16,9 @@ class AuditStatusEnum extends BaseEnum
     public static function getMap(): array
     {
         return [
-            self::ENABLED => '通过',
-            self::DISABLED => '待审',
-            self::SUCCESS => '驳回',
+            self::ENABLED => '已审核',
+            self::DISABLED => '待审核',
+            self::SUCCESS => '已驳回',
         ];
     }
 }

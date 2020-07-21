@@ -45,7 +45,7 @@ $this->title = "添加收款单";
                                 ]
                             ]);?>
                             <?= $form->field( $model, 'customer_id' )->dropDownList( $customer,['prompt'=>'请选择...'] )?>
-
+                            <?= $form->field($model, 'receipt_reason')->dropDownList([],['prompt'=>'请选择...']);?>
                         </div>
 
                         <div class="col-sm-6">

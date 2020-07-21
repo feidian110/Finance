@@ -161,11 +161,11 @@ class CapitalController extends BaseController
         $sum1 = $sum2 = $sum3 = $sum4 = $sum5  = 0;
         if( $this->getStoreId() ){
             $list2 = Yii::$app->getDb()
-                ->createCommand("select id,supplier_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and store_id=".$this->getStoreId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
+                ->createCommand("select id,supplier_id,sn,bill_date,bill_type,sum(amount_payable) as amount_payable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and store_id=".$this->getStoreId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
                 ->queryAll();
         }else{
             $list2 = Yii::$app->getDb()
-                ->createCommand("select id,supplier_id,sn,bill_date,bill_type,sum(amount_receivable) as amount_receivable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
+                ->createCommand("select id,supplier_id,sn,bill_date,bill_type,sum(amount_payable) as amount_payable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
                 ->queryAll();
         }
         foreach ( $list1 as $arr => $row ){
@@ -183,8 +183,8 @@ class CapitalController extends BaseController
             foreach ( $list2 as $arr1 => $row1 ){
                 $arr = time() + $arr1;
                 if ($row['id'] == $row1['supplier_id'] ) {
-                    $sum1 += $a1 = $row1['amount_receivable']>0 ? abs($row1['amount_receivable']) : 0;
-                    $sum2 += $a2 = $row1['income']>0 ? abs($row1['income']) : 0;
+                    $sum1 += $a1 = $row1['amount_payable']>0 ? abs($row1['amount_payable']) : 0;
+                    $sum2 += $a2 = $row1['expend']>0 ? abs($row1['expend']) : 0;
                     $a3 = $row['init_balance'] + $sum1 - $sum2;
                     $v[$arr]['code'] = $row1['id'] ? $row['id'] : "";
                     $v[$arr]['title']     = $row1['id'] ? $row['title'] : "";
@@ -192,9 +192,9 @@ class CapitalController extends BaseController
                     $v[$arr]['billDate'] = $row1['id'] ? $row1['bill_date'] : "";
                     $v[$arr]['billNo'] = $row1['id'] ? $row1['sn'] : "小计：";
                     $v[$arr]['transType'] = $row1['id'] ? BillTypeEnum::getValue($row1['bill_type']) : "";
-                    $v[$arr]['payable']  = number_format($row1['amount_receivable'],2);
-                    $v[$arr]['advance'] = number_format($row1['income'],2);
-                    $v[$arr]['payableBalance'] = $row1['id'] ? number_format($a3,2) : number_format($row['receivables_balance']+$row1['amount_receivable']-$row1['income'],2);
+                    $v[$arr]['payable']  = number_format($row1['amount_payable'],2);
+                    $v[$arr]['advance'] = number_format($row1['expend'],2);
+                    $v[$arr]['payableBalance'] = $row1['id'] ? number_format($a3,2) : number_format($row['init_balance']+$row1['amount_payable']-$row1['expend'],2);
                     $v[$arr]['remark']      = '';
                 }
 

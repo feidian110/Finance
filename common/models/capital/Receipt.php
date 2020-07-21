@@ -5,6 +5,7 @@ namespace addons\Finance\common\models\capital;
 use addons\Crm\common\models\contract\Contract;
 use addons\Crm\common\models\customer\Customer;
 use common\behaviors\MerchantBehavior;
+use common\models\merchant\Member;
 use Yii;
 
 /**
@@ -101,6 +102,21 @@ class Receipt extends \common\models\base\BaseModel
         return $this->hasOne( Customer::class,['id'=>'customer_id'] );
     }
 
+    public function getCreator()
+    {
+        return $this->hasOne( Member::class,['id' => 'creator_id'] );
+    }
+
+    public function getPayee()
+    {
+        return $this->hasOne( Member::class,['id' => 'payee_id'] );
+    }
+
+    public function getAuditor()
+    {
+        return $this->hasOne( Member::class,['id' => 'auditor_id'] );
+    }
+
     public function beforeSave($insert)
     {
         if ($this->isNewRecord) {
@@ -134,7 +150,7 @@ class Receipt extends \common\models\base\BaseModel
             'auditor_id' => '审核人',
             'audit_status' => '审核状态',
             'audit_time' => '审核时间',
-            'created_at' => 'Created At',
+            'created_at' => '创建时间',
             'updated_at' => 'Updated At',
             'detail' => '收款明细',
         ];

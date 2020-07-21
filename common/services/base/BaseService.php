@@ -4,6 +4,7 @@
 namespace addons\Finance\common\services\base;
 
 
+use addons\Crm\common\enums\CrmTypeEnum;
 use addons\Finance\common\enums\FinanceTypeEnum;
 use common\components\Service;
 use common\enums\AppEnum;
@@ -32,7 +33,7 @@ class BaseService extends Service
             ->orderBy(['created_at'=>SORT_DESC] )
             ->one();
         if( $data == null ){
-            $sn = $prefix.$date.$this->getMerchantId().'00001';
+            $sn = $prefix.$date.$this->getMerchantId().'1001';
         }else{
             $position = strpos($data['sn'],$prefix);
             $str = strlen($prefix);
@@ -51,7 +52,7 @@ class BaseService extends Service
     {
         switch ($crmType){
             case FinanceTypeEnum::RECEIPT :
-                return "SK_";
+                return "SKD_";
                 break;
             case CrmTypeEnum::CUSTOMER:
                 return "KH_";
@@ -68,11 +69,8 @@ class BaseService extends Service
             case CrmTypeEnum::FOLLOW:
                 return "GJ_";
                 break;
-            case CrmTypeEnum::RECEIPT:
-                return "SK_";
-                break;
             case CrmTypeEnum::PAY:
-                return "FK_";
+                return "FKD_";
                 break;
         }
         return false;
