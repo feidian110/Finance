@@ -67,4 +67,13 @@ class ReceiptController extends BaseController
             'staff' => Yii::$app->financeService->base->getNormalStaff()
         ] );
     }
+
+    public function actionView()
+    {
+        $id = Yii::$app->request->get('id',0);
+        $model = $this->findModel($id);
+        return $this->renderAjax( $this->action->id, [
+            'model' => $model
+        ] );
+    }
 }

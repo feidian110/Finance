@@ -153,7 +153,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return Html::a('打印',['print', 'id' =>$model->id],['class' => 'btn btn-info btn-xs']);
                                 },
                                 'view' => function($url, $model ){
-                                    return Html::a('查看',['view', 'id' => $model->id],['class'=>'btn btn-success btn-xs']);
+                                    return Html::a('查看',['view', 'id' => $model->id],['class'=>'btn btn-success btn-xs',
+                                        'data-toggle' => 'modal',
+                                        'data-target' => '#ajaxModalLg',
+                                        ]);
                                 },
                                 'edit' => function ($url, $model, $key) {
                                     return Html::edit(['edit', 'id' => $model->id],'编辑',['class'=>'btn btn-primary btn-xs']);

@@ -1,5 +1,6 @@
 <?php
 
+use addons\Finance\common\enums\ReasonEnum;
 use yii\widgets\ActiveForm;
 
 
@@ -45,7 +46,7 @@ $this->title = "添加收款单";
                                 ]
                             ]);?>
                             <?= $form->field( $model, 'customer_id' )->dropDownList( $customer,['prompt'=>'请选择...'] )?>
-                            <?= $form->field($model, 'receipt_reason')->dropDownList([],['prompt'=>'请选择...']);?>
+                            <?= $form->field($model, 'receipt_reason')->dropDownList(ReasonEnum::getMap(),['prompt'=>'请选择...']);?>
                         </div>
 
                         <div class="col-sm-6">

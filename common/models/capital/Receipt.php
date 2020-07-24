@@ -4,8 +4,10 @@ namespace addons\Finance\common\models\capital;
 
 use addons\Crm\common\models\contract\Contract;
 use addons\Crm\common\models\customer\Customer;
+use addons\Store\common\models\store\Store;
 use common\behaviors\MerchantBehavior;
 use common\models\merchant\Member;
+use common\models\merchant\Merchant;
 use Yii;
 
 /**
@@ -97,9 +99,24 @@ class Receipt extends \common\models\base\BaseModel
         return true;
     }
 
+    public function getMerchant()
+    {
+        return $this->hasOne( Merchant::class, ['id' => 'merchant_id'] );
+    }
+
+    public function getStore()
+    {
+        return $this->hasOne( Store::class, ['id' => 'store_id'] );
+    }
+
     public function getCustomer()
     {
         return $this->hasOne( Customer::class,['id'=>'customer_id'] );
+    }
+
+    public function getOrder()
+    {
+        return $this->hasOne( Contract::class,['id' => 'order_id'] );
     }
 
     public function getCreator()
@@ -115,6 +132,12 @@ class Receipt extends \common\models\base\BaseModel
     public function getAuditor()
     {
         return $this->hasOne( Member::class,['id' => 'auditor_id'] );
+    }
+
+
+    public function getProfile()
+    {
+        return $this->hasMany( ReceiptDetail::class,['receipt_id' => 'id'] );
     }
 
     public function beforeSave($insert)

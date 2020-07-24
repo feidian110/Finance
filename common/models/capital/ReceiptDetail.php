@@ -2,6 +2,7 @@
 
 namespace addons\Finance\common\models\capital;
 
+use addons\Finance\common\models\base\Category;
 use common\behaviors\MerchantBehavior;
 use Yii;
 
@@ -49,6 +50,11 @@ class ReceiptDetail extends \common\models\base\BaseModel
             [['price'], 'number'],
             [['remark'], 'string', 'max' => 2000],
         ];
+    }
+
+    public function getMethod()
+    {
+        return $this->hasOne( Category::class,['id' => 'method_id'] );
     }
 
     public function beforeSave($insert)
