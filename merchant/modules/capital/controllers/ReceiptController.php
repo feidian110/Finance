@@ -4,9 +4,11 @@
 namespace addons\Finance\merchant\modules\capital\controllers;
 
 
+use addons\Finance\common\enums\AuditStatusEnum;
 use addons\Finance\common\enums\BillTypeEnum;
 use addons\Finance\common\enums\FinanceTypeEnum;
 use addons\Finance\common\models\capital\Receipt;
+use addons\Finance\common\models\report\Invoice;
 use addons\Finance\merchant\controllers\BaseController;
 use common\enums\StatusEnum;
 use common\models\base\SearchModel;
@@ -57,8 +59,9 @@ class ReceiptController extends BaseController
             $model->receipt_price = array_sum(array_column($post['Receipt']['detail'], 'price'));
 
             if( $model->create($post) ){
-
+                return $this->message('收据添加成功！', $this->redirect(['index']), 'success');
             }
+            return $this->message("收款添加失败！", $this->redirect(['index']), 'error');
         }
         return $this->render( $this->action->id,[
             'model' =>$model,
@@ -75,5 +78,18 @@ class ReceiptController extends BaseController
         return $this->renderAjax( $this->action->id, [
             'model' => $model
         ] );
+    }
+
+    public function actionAudit()
+    {
+        $id = Yii::$app->request->get('id');
+        $status = Yii::$app->request->get('status');
+        $model = $this->findModel($id);
+        $result = $model::updateAll(['audit_status' =>$status,'status' => $status,'audit_time' => $status== AuditStatusEnum::ENABLED ? time() : null,'auditor_id' => Yii::$app->user->getId() ],['id' =>$id]);
+        $res = Invoice::updateAll(['status' =>$status],['obj_id' =>$id, 'bill_type' => BillTypeEnum::INCOME]);
+        if( $result && $res ){
+            return $this->message('状态更新成功！', $this->redirect(['index']), 'success');
+        }
+        return $this->message("状态更新失败！", $this->redirect(['index']), 'error');
     }
 }
