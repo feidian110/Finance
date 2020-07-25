@@ -97,7 +97,7 @@ $this->title = "查看";
             </table>
         </div>
         <div style="height: 60px; line-height: 60px; text-align: center;">
-            <?= Html::a($model['audit_status'] == AuditStatusEnum::ENABLED ? "<i class='fa fa-fw fa-question-circle'> 反审核" : "</i><i class='fa fa-fw fa-check'></i> 审核",['audit','id'=>$model['id'],'status'=> $model['audit_status']== AuditStatusEnum::ENABLED ? AuditStatusEnum::DISABLED : AuditStatusEnum::ENABLED],['class'=> 'btn btn-warning']);?>
+            <?= Html::a($model['audit_status'] == AuditStatusEnum::ENABLED ? "<i class='fa fa-fw fa-question-circle'></i> 反审核" : "<i class='fa fa-fw fa-check'></i> 审核",['audit','id'=>$model['id'],'status'=> $model['audit_status']== AuditStatusEnum::ENABLED ? AuditStatusEnum::DISABLED : AuditStatusEnum::ENABLED],['class'=> 'btn btn-warning']);?>
             <?= Html::a('<i class="fa fa-fw fa-print"></i> 打印','javascript:prn1_preview()',['class'=> 'btn btn-info']);?>
         </div>
     </div>
