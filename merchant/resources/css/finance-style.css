@@ -1,0 +1,11 @@
+.has-audit{
+    background-image: url("../img/audit.png") ;
+    background-repeat: no-repeat;
+    width: 150px;
+    height: 74px;
+    position: absolute;
+    right: 100px;
+    bottom: 400px;
+    top: 50px;
+    z-index: 1;
+}

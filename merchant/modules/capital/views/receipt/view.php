@@ -37,6 +37,9 @@ $this->title = "查看";
                 <h5>No.：<?=$model['sn'];?></h5>
             </div>
         </div>
+        <?php if( $model['audit_status'] == AuditStatusEnum::ENABLED ):?>
+            <div class="has-audit"></div>
+        <?php endif;?>
         <div id="form1">
             <table style="border-top: 1px solid black ; border-bottom: 1px solid black">
                 <tr>

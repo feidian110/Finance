@@ -18,6 +18,7 @@ class AppAsset extends AssetBundle
     public $sourcePath = '@addons/Finance/merchant/resources/';
 
     public $css = [
+        'css/finance-style.css'
     ];
 
     public $js = [
