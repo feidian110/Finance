@@ -18,13 +18,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     <tr>
                         <th class="text-center">编码</th>
                         <th class="text-center" width="300">供应商</th>
-                        <th class="text-center" width="150">供应商类别</th>
+
                         <th class="text-center" width="150">单据日期</th>
                         <th class="text-center">单据编号</th>
                         <th class="text-center">业务类型</th>
                         <th class="text-center">增加应付款</th>
                         <th class="text-center">增加预付款</th>
                         <th class="text-center">应付款余额</th>
+                        <th class="text-center">关联订单</th>
+                        <th class="text-center">负责人</th>
                         <th class="text-center" width="400">备注</th>
                     </tr>
                     </thead>
@@ -33,13 +35,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         <tr>
                             <td class="text-center"><?= $item['code'] ?? "";?></td>
                             <td class="text-center"><?= $item['title'] ?? "";?></td>
-                            <td class="text-center"><?= $item['cate'] ?? "";?></td>
+
                             <td class="text-center"><?= $item['billDate'] ?? "";?></td>
                             <td class="text-center"><?= $item['billNo'] ?? "";?></td>
                             <td class="text-center"><?= $item['transType'] ?? "";?></td>
                             <td class="text-right"><?= $item['payable']==0 ? "" : $item['payable'];?></td>
                             <td class="text-right"><?= $item['advance'] == 0 ? "" : $item['advance'];?></td>
                             <td class="text-right"><?= $item['payableBalance'] == 0 ? "" : $item['payableBalance'];?></td>
+                            <td><?=$item['execute'];?></td>
+                            <td><?=$item['owner'];?></td>
                             <td><?= $item['remark'] ?? "";?></td>
                         </tr>
                     <?php endforeach;?>
@@ -51,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <td class="text-right"><label class="direct-chat-name"><?= $data['total']['receivables'] ?? "";?></label></td>
                         <td class="text-right"><label class="direct-chat-name"><?= $data['total']['income'] ?? "";?></label></td>
                         <td class="text-right"><label class="direct-chat-name"><?= $data['total']['balance'] ?? "";?></label></td>
-                        <td colspan="2"></td>
+                        <td colspan="3"></td>
                     </tr>
                     </tfoot>
                 </table>

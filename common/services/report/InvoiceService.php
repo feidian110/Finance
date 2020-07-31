@@ -2,6 +2,7 @@
 namespace addons\Finance\common\services\report;
 
 use addons\Crm\common\models\customer\Customer;
+use addons\Crm\common\models\execute\Execute;
 use addons\Finance\common\enums\BillTypeEnum;
 use addons\Finance\common\models\report\Invoice;
 use common\components\Service;
@@ -84,6 +85,15 @@ class InvoiceService extends Service
             ->andWhere(['=','status',StatusEnum::ENABLED])
             ->sum('amount_receivable');
         return $sum;
+    }
+
+    public function getExecuteInfo($id = [])
+    {
+        return  Execute::find()
+            ->where(['id' =>$id])
+            ->andWhere(['merchant_id' => $this->getMerchantId()])
+            ->one();
+
     }
 
     /**

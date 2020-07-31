@@ -161,13 +161,14 @@ class CapitalController extends BaseController
         $sum1 = $sum2 = $sum3 = $sum4 = $sum5  = 0;
         if( $this->getStoreId() ){
             $list2 = Yii::$app->getDb()
-                ->createCommand("select id,supplier_id,sn,bill_date,bill_type,sum(amount_payable) as amount_payable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and store_id=".$this->getStoreId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
+                ->createCommand("select id,supplier_id,obj_id,sn,bill_date,bill_type,sum(amount_payable) as amount_payable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and store_id=".$this->getStoreId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
                 ->queryAll();
         }else{
             $list2 = Yii::$app->getDb()
-                ->createCommand("select id,supplier_id,sn,bill_date,bill_type,sum(amount_payable) as amount_payable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
+                ->createCommand("select id,supplier_id,obj_id,sn,bill_date,bill_type,sum(amount_payable) as amount_payable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
                 ->queryAll();
         }
+
         foreach ( $list1 as $arr => $row ){
             $v[$arr]['code'] = $row['id'];
             $v[$arr]['title']     = $row['title'];
@@ -178,13 +179,17 @@ class CapitalController extends BaseController
             $v[$arr]['payable']      = "";
             $v[$arr]['advance'] = "";
             $v[$arr]['payableBalance'] = $row['init_balance'];
+            $v[$arr]['execute'] = "";
+            $v[$arr]['owner'] = "";
             $v[$arr]['remark']      = '';
 
             foreach ( $list2 as $arr1 => $row1 ){
+
                 $arr = time() + $arr1;
                 if ($row['id'] == $row1['supplier_id'] ) {
                     $sum1 += $a1 = $row1['amount_payable']>0 ? abs($row1['amount_payable']) : 0;
                     $sum2 += $a2 = $row1['expend']>0 ? abs($row1['expend']) : 0;
+                    $execute = Yii::$app->financeService->invoice->getExecuteInfo($row1['obj_id']);
                     $a3 = $row['init_balance'] + $sum1 - $sum2;
                     $v[$arr]['code'] = $row1['id'] ? $row['id'] : "";
                     $v[$arr]['title']     = $row1['id'] ? $row['title'] : "";
@@ -195,6 +200,8 @@ class CapitalController extends BaseController
                     $v[$arr]['payable']  = number_format($row1['amount_payable'],2);
                     $v[$arr]['advance'] = number_format($row1['expend'],2);
                     $v[$arr]['payableBalance'] = $row1['id'] ? number_format($a3,2) : number_format($row['init_balance']+$row1['amount_payable']-$row1['expend'],2);
+                    $v[$arr]['execute'] = $row1['id'] ? $execute->title :  "";
+                    $v[$arr]['owner'] = $row1['id'] ? $execute['owner']['realname'] :  "";
                     $v[$arr]['remark']      = '';
                 }
 
@@ -204,6 +211,7 @@ class CapitalController extends BaseController
             $sum4 += $sum2;
             $sum1 = $sum2 = 0;
         }
+
         $data['list'] = isset($v) ? array_values($v) :'';
         return $this->render( $this->action->id,[
             'model' => $data

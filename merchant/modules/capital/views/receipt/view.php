@@ -49,7 +49,7 @@ $this->title = "查看";
                             <tr>
                                 <td>兹收到</td>
                                 <td colspan="4"><?php if( $model['order']['nature_id'] == NatureEnum::BIRTHDAY ){
-                                        echo '寿星：'. $model['groom_name'] ;
+                                        echo '寿星：'. $model['order']['groom_name'] ;
                                     }elseif ( $model['order']['nature_id'] == NatureEnum::MARRY || $model['order']['nature_id'] == NatureEnum::JOINT ){
                                         echo '新郎：'.$model['order']['groom_name'] .'&'.'新娘：'.$model['order']['bride_name'];
                                     }elseif ($model['order']['nature_id'] == NatureEnum::BACK){
