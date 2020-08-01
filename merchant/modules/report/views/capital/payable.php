@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <th class="text-center">应付款余额</th>
                         <th class="text-center">关联订单</th>
                         <th class="text-center">负责人</th>
-                        <th class="text-center" width="400">备注</th>
+                        <th class="text-center" width="300">备注</th>
                     </tr>
                     </thead>
                     <tbody>
