@@ -165,7 +165,7 @@ class CapitalController extends BaseController
                 ->queryAll();
         }else{
             $list2 = Yii::$app->getDb()
-                ->createCommand("select id,supplier_id,obj_id,sn,bill_date,bill_type,sum(amount_payable) as amount_payable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and status=".StatusEnum::ENABLED."  group by supplier_id,id with rollup" )
+                ->createCommand("select id,supplier_id,obj_id,sn,bill_date,bill_type,sum(amount_payable) as amount_payable,sum(expend) as expend from {{%addon_finance_invoice}} where merchant_id=".$this->getMerchantId()." and status=".StatusEnum::ENABLED." group by supplier_id,id with rollup" )
                 ->queryAll();
         }
 
