@@ -200,7 +200,7 @@ class CapitalController extends BaseController
                     $v[$arr]['payable']  = number_format($row1['amount_payable'],2);
                     $v[$arr]['advance'] = number_format($row1['expend'],2);
                     $v[$arr]['payableBalance'] = $row1['id'] ? number_format($a3,2) : number_format($row['init_balance']+$row1['amount_payable']-$row1['expend'],2);
-                    $v[$arr]['execute'] = $row1['id'] ? $execute->title :  "";
+                    $v[$arr]['execute'] = $row1['id'] && $row1['bill_type'] ==BillTypeEnum::WORKS ? $execute->title :  "";
                     $v[$arr]['owner'] = $row1['id'] ? $execute['owner']['realname'] :  "";
                     $v[$arr]['remark']      = '';
                 }

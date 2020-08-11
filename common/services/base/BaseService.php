@@ -54,22 +54,7 @@ class BaseService extends Service
             case FinanceTypeEnum::RECEIPT :
                 return "SKD_";
                 break;
-            case CrmTypeEnum::CUSTOMER:
-                return "KH_";
-                break;
-            case CrmTypeEnum::BUSINESS:
-                return "SJ_";
-                break;
-            case CrmTypeEnum::CONTACT:
-                return "LXR_";
-                break;
-            case CrmTypeEnum::CONTRACT:
-                return "HT_";
-                break;
-            case CrmTypeEnum::FOLLOW:
-                return "GJ_";
-                break;
-            case CrmTypeEnum::PAY:
+            case FinanceTypeEnum::PAYMENT:
                 return "FKD_";
                 break;
         }

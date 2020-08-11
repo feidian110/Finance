@@ -29,15 +29,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     </thead>
                     <tbody>
                     <?php foreach ( $data['list'] as $item ):?>
-                    <tr>
+                    <tr style="<?php if( $item['billNo'] == '小计：' ){echo "font-weight: bold;color: #000000";}?>">
                         <td class="text-center"><?= $item['code'] ?? "";?></td>
                         <td class="text-center"><?= $item['customerTitle'] ?? "";?></td>
                         <td class="text-center"><?= $item['billDate'] ?? "";?></td>
                         <td class="text-center"><?= $item['billNo'] ?? "";?></td>
                         <td class="text-center"><?= $item['transType'] ?? "";?></td>
                         <td class="text-right"><?= $item['receivables']==0 ? "" : $item['receivables'];?></td>
-                        <td class="text-right"><?= $item['advanceCharge'] == 0 ? "" : $item['advanceCharge'];?></td>
-                        <td class="text-right"><?= $item['receivableBalance'] == 0 ? "" : $item['receivableBalance'];?></td>
+                        <td class="text-right" style="<?php if($item['advanceCharge']>0){echo "color: #228B22";}?>"><?= $item['advanceCharge'] == 0 ? "" : $item['advanceCharge'];?></td>
+                        <td class="text-right" style="<?php if($item['receivableBalance']<0){echo "color: #B22222";}?>"><?= $item['receivableBalance'] == 0 ? "" : $item['receivableBalance'];?></td>
                         <td><?= $item['remark'] ?? "";?></td>
                     </tr>
                     <?php endforeach;?>

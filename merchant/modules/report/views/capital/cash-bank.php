@@ -30,15 +30,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     </thead>
                     <tbody>
                     <?php foreach ( $model['list'] as $item ):?>
-                        <tr>
+                        <tr style="<?php if( $item['transType'] == '小计：' ){echo "font-weight: bold;color: #000000";}?>">
                             <td class="text-center"><?= $item['code'] ?? "";?></td>
                             <td class="text-center"><?= $item['title'] ?? "";?></td>
                             <td class="text-center"><?= $item['billDate'] ?? "";?></td>
                             <td class="text-center"><?= $item['billNo'] ?? "";?></td>
                             <td class="text-center"><?= $item['transType'] ?? "";?></td>
-                            <td class="text-right"><?= $item['income']==0 ? "" : $item['income'];?></td>
-                            <td class="text-right"><?= $item['expend'] == 0 ? "" : $item['expend'];?></td>
-                            <td class="text-right"><?= $item['balance'] == 0 ? "" : $item['balance'];?></td>
+                            <td class="text-right" style="color: #228B22"><?= $item['income']==0 ? "" : $item['income'];?></td>
+                            <td class="text-right" style="color: #FF0000"><?= $item['expend'] == 0 ? "" : $item['expend'];?></td>
+                            <td class="text-right" style="<?php if ( $item['balance'] < 0){echo "color: #FF0000";};?>"><?= $item['balance'] == 0 ? "" : $item['balance'];?></td>
                             <td><?=$item['contacts'];?></td>
                             <td class="text-center"><?= $item['owner'] ?? "";?></td>
                         </tr>

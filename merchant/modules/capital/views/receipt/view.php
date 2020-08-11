@@ -91,9 +91,9 @@ $this->title = "查看";
                     <td></td>
                     <td>会计：</td>
                     <td></td>
-                    <td>审核人：<?=$model['auditor']['realname'];?></td>
+                    <td>审核人：<?=$model['auditor']['realname'] ? $model['auditor']['realname'] : [];?></td>
                     <td></td>
-                    <td>收款人：<?=$model['payee']['realname'];?></td>
+                    <td>收款人：<?=$model['payee']['realname'] ? $model['payee']['realname'] : [];?></td>
                     <td></td>
                     <td>制单人：<?=$model['creator']['realname'];?></td>
                 </tr>

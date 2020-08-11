@@ -74,6 +74,26 @@ class InvoiceService extends Service
         return true;
     }
 
+    public function createCharge($data)
+    {
+        $model = new  Invoice();
+        $model->obj_id = $data['payment_id'];
+        $model->profile_id = $data['id'];
+        $model->supplier_id = $data['supplier_id'];
+        $model->account_id = $data['account_id'];
+        $model->sn = $data['sn'];
+        $model->bill_date = $data['payment_date'];
+        $model->bill_type = BillTypeEnum::EXPEND;
+        $model->expend = $data['amount'];
+        $model->creator_id = Yii::$app->user->getId();
+        $model->owner_id = $data['payer_id'];
+        $model->store_id = $data['store_id'];
+        if( !$model ->save() ){
+            return $model->getErrors();
+        }
+        return true;
+    }
+
     /**
      * 应收款总和
      * @return mixed

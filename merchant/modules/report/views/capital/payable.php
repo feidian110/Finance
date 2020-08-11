@@ -1,4 +1,4 @@
-<?php
+                                                                        <?php
 
 $this->title = "应付款明细表";
 $this->params['breadcrumbs'][] = ['label' => "报表管理"];
@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </thead>
                     <tbody>
                     <?php foreach ( $model['list'] as $item ):?>
-                        <tr>
+                        <tr style="<?php if( $item['billNo'] == '小计：' ){echo "font-weight: bold;color: #000000";}?>">
                             <td class="text-center"><?= $item['code'] ?? "";?></td>
                             <td class="text-center"><?= $item['title'] ?? "";?></td>
 
@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <td class="text-center"><?= $item['transType'] ?? "";?></td>
                             <td class="text-right"><?= $item['payable']==0 ? "" : $item['payable'];?></td>
                             <td class="text-right"><?= $item['advance'] == 0 ? "" : $item['advance'];?></td>
-                            <td class="text-right"><?= $item['payableBalance'] == 0 ? "" : $item['payableBalance'];?></td>
+                            <td class="text-right" style="<?php if($item['payableBalance'] < 0){echo "color: #FF0000";}?>"><?= $item['payableBalance'] == 0 ? "" : $item['payableBalance'];?></td>
                             <td><?=$item['execute'];?></td>
                             <td><?=$item['owner'];?></td>
                             <td><?= $item['remark'] ?? "";?></td>
